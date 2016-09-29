@@ -30,7 +30,7 @@ echo "rvm list"
 source /usr/local/rvm/scripts/rvm
 rvm list
 
-echo "================= gclould Versions ==================="
+echo "================= gcloud Versions ==================="
 printf "\n"
 echo "gcloud version"
 gcloud version
