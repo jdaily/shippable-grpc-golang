@@ -1,2 +1,2 @@
 # u16
-Ubuntu 14.04 base image
+Ubuntu 16.04 base image
