@@ -20,6 +20,7 @@ apt-get install -y \
   curl \
   gcc \
   make \
+  netcat \
   openssl \
   software-properties-common \
   wget \
