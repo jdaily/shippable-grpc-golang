@@ -10,5 +10,5 @@ export NVM_DIR="/root/.nvm"
 echo "source ~/.nvm/nvm.sh" >> $HOME/.bashrc
 
 echo "================= Installing latest nodejs ==================="
-curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
+curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
 sudo apt-get install -y nodejs
