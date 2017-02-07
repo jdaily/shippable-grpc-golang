@@ -45,10 +45,9 @@ createImage() {
 dockerPush() {
   if [ "$IS_GIT_TAG" = true ];
   then
-    echo "Pushing Tag " $IMAGE_NAME:prod
+    echo "Pushing Tag " $IMAGE_NAME:$GIT_TAG
     sudo docker push $IMAGE_NAME:$GIT_TAG
-    #sudo docker push -f $IMAGE_NAME:prod
-    echo "Completed Pushing Tag" $IMAGE_NAME:prod
+    echo "Completed Pushing Tag" $IMAGE_NAME:$GIT_TAG
   else
     echo "Pushing Tag " $IMAGE_NAME:tip
     sudo docker push $IMAGE_NAME:tip
