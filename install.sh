@@ -1,4 +1,6 @@
-#!/bin/bash -e 
+#!/bin/bash -e
+
+export DEBIAN_FRONTEND=noninteractive
 
 dpkg-divert --local --rename --add /sbin/initctl
 locale-gen en_US en_US.UTF-8
@@ -12,29 +14,29 @@ apt-get update
 
 echo "================= Adding some global settings ==================="
 mv gbl_env.sh /etc/profile.d/
-mkdir -p $HOME/.ssh/
-mv config $HOME/.ssh/
+mkdir -p "$HOME/.ssh/"
+mv config "$HOME/.ssh/"
 mv 90forceyes /etc/apt/apt.conf.d/
-touch $HOME/.ssh/known_hosts
+touch "$HOME/.ssh/known_hosts"
 
 echo "================= Installing basic packages ==================="
 apt-get install -y \
-    sudo  \
     build-essential \
     curl \
     gcc \
+    gettext \
+    htop \
+    libxml2-dev \
+    libxslt-dev \
     make \
+    nano \
+    openssh-client \
     openssl \
     software-properties-common \
-    wget \
-    nano \
+    sudo  \
+    texinfo \
     unzip \
-    openssh-client \
-    libxslt-dev \
-    libxml2-dev \
-    htop \
-    gettext \
-    texinfo
+    wget
 
 echo "================= Installing Python packages ==================="
 apt-get install -y \
