@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash
 export DEBIAN_FRONTEND=noninteractive
 
 dpkg-divert --local --rename --add /sbin/initctl
@@ -6,11 +6,12 @@ locale-gen en_US en_US.UTF-8
 dpkg-reconfigure locales
 
 echo "HOME=$HOME"
+cd /u16
 
-echo "================= Adding gcloud ============"
-CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)"
-echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | tee /etc/apt/sources.list.d/google-cloud-sdk.list
-curl -sS https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+echo "================= Adding some global settings ==================="
+mv gbl_env.sh /etc/profile.d/
+mkdir -p "$HOME/.ssh/"
+touch "$HOME/.ssh/known_hosts"
 
 echo "================= Adding packages for shippable_service =================="
 apt-get update && apt-get install -y \
@@ -40,40 +41,26 @@ apt-get update && apt-get install -y \
     scons \
     binutils \
     bzr \
-    google-cloud-sdk
 
 sudo chmod 1777 /tmp
 
-
-# Install gvm
-echo "================= Install gvm ==================="
-curl -s -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer | bash
-
-
-#set the source path of gvm. $HOME points to '/root'
-[[ -s "$HOME/.gvm/scripts/gvm" ]] && source $HOME/.gvm/scripts/gvm
-export  CGO_ENABLED=0
+echo "================= Adding gcloud ============"
+CLOUD_SDK_REPO="cloud-sdk-xenial"
+echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | tee /etc/apt/sources.list.d/google-cloud-sdk.list
+curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+    
+apt-get update && apt-get install -y google-cloud-sdk
 
 # Install Go 1.8
 echo "================= Install Go 1.8 ==================="
-gvm install go1.8 --prefer-binary && gvm use go1.8 && go install -a -race std && go get -u github.com/tools/godep
-gvm use go1.8 --default
+export  CGO_ENABLED=0
 
+curl -s https://storage.googleapis.com/golang/go1.8.linux-amd64.tar.gz | tar zxvf - -C /usr/local
+#echo 'export PATH=$PATH:/usr/local/go/bin' >> $HOME/.bashrc
+echo 'export PATH=$PATH:/usr/local/go/bin' >> $HOME/.bashrc
 
-export PB_VER=3.2.0
-
-export PB_URL=https://github.com/google/protobuf/releases/download/v${PB_VER}/protoc-${PB_VER}-linux-x86_64.zip
-curl -L ${PB_URL} > /tmp/protoc.zip && \
-    cd /tmp && \
-    unzip protoc.zip -d /usr/local && \
-    chmod go+rx /usr/local/bin/protoc && \
-    cd /tmp && \
-    rm -r /tmp/protoc.zip
-
-go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway
-go get -u github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger
-go get -u github.com/golang/protobuf/protoc-gen-go
-curl https://glide.sh/get | sh
+# Really stupid dumb hack for stupid docker "sh" only
+ln -s /usr/local/go/bin/go /usr/bin/go
 
 # Install shippable stuffs
 
